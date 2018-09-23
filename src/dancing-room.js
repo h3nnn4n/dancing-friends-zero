@@ -48,10 +48,31 @@ function draw() {
     walls[p].show();
   }
 
+  var center = get_center();
+
   for (p in dancers) {
+    dancers[p].away_from_center(center);
     dancers[p].dance();
     dancers[p].show();
   }
 
   Engine.update(engine, 1000 / 60);
 }
+
+function get_center() {
+  var l = dancers.length;
+  var x = 0;
+  var y = 0;
+
+  for (var prop in dancers) {
+    var d = dancers[prop];
+    x += d.body.position.x;
+    y += d.body.position.y;
+  }
+
+  return createVector(
+    x / l,
+    y / l
+  );
+}
+

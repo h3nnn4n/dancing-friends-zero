@@ -9,6 +9,7 @@ function Dancer(x, y, w, h, options_) {
 
   this.afraid_force = -0.000025;
   this.likes_force = 0.0001;
+  this.center_force = -0.0001;
 
   this.afraid = [];
   this.likes = [];
@@ -59,6 +60,25 @@ function Dancer(x, y, w, h, options_) {
       this.dance_towards(this.afraid[prop], this.afraid_force);
     }
   };
+
+  this.away_from_center = function(center) {
+    var pos1 = this.get_position_vector();
+    var pos2 = center.copy();
+    var pos3 = pos2.sub(pos1);
+
+    pos3.setMag(this.center_force);
+
+    Body.applyForce(
+      this.body, {
+        x: pos1.x,
+        y: pos1.y
+      },
+      {
+        x: pos3.x,
+        y: pos3.y
+      }
+    );
+  }
 
   this.dance_towards = function(dancer, force) {
     var pos1 = this.get_position_vector();
