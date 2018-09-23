@@ -12,6 +12,7 @@ var walls = [];
 
 function setup() {
   createCanvas(700, 600);
+  colorMode(HSB);
   engine = Engine.create();
   world = engine.world;
 
@@ -22,18 +23,26 @@ function setup() {
 }
 
 function set_walls() {
-  walls.push(new Dancer(width / 2, height, width, 50, {isStatic: true}));
-  walls.push(new Dancer(width / 2, 0, width, 50, {isStatic: true}));
-  walls.push(new Dancer(0, height / 2, 50, height, {isStatic: true}));
-  walls.push(new Dancer(width, height / 2, 50, height, {isStatic: true}));
+  colorMode(RGB);
+  var options = {
+    isStatic: true,
+    color: color(120),
+    border_color: color(120)
+  };
+  colorMode(HSB);
+
+  walls.push(new Dancer(width / 2 , height     , width , 50     , options));
+  walls.push(new Dancer(width / 2 , 0          , width , 50     , options));
+  walls.push(new Dancer(0         , height / 2 , 50    , height , options));
+  walls.push(new Dancer(width     , height / 2 , 50    , height , options));
 }
 
 function spawn_dancers() {
   for (var i = 0; i < 50; i++) {
     dancers.push(
       new Dancer(
-        random(100, 500),
-        random(100, 500),
+        random(100, width - 100),
+        random(100, height - 100),
         random(10, 15),
         random(10, 15)
       )
@@ -42,7 +51,7 @@ function spawn_dancers() {
 }
 
 function draw() {
-  background(0, 0, 0);
+  background(255);
 
   for (var p in walls) {
     walls[p].show();

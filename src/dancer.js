@@ -15,7 +15,13 @@ function Dancer(x, y, w, h, options_) {
   this.likes = [];
   this.ticks = 0;
 
-  this.c = color(random() * 255, random() * 255, random() * 255);
+  if (options.color) {
+    this.fill_color = options.color;
+    this.border_color = options.border_color;
+  } else {
+    this.fill_color = color(random() * 255, random() * 255, random() * 255);
+    this.border_color = color(255);
+  }
 
   this.body = Bodies.rectangle(x, y, w, h, options);
   this.w = w;
@@ -31,15 +37,15 @@ function Dancer(x, y, w, h, options_) {
     rotate(angle);
     rectMode(CENTER);
     strokeWeight(1);
-    stroke(255);
-    fill(this.c);
+    stroke(this.border_color);
+    fill(this.fill_color);
     rect(0, 0, this.w, this.h);
     pop();
   };
 
   this.get_position_vector = function() {
     return createVector(this.body.position.x, this.body.position.y);
-  }
+  };
 
   this.dance = function() {
     if (this.ticks > 0) {
@@ -78,7 +84,7 @@ function Dancer(x, y, w, h, options_) {
         y: pos3.y
       }
     );
-  }
+  };
 
   this.dance_towards = function(dancer, force) {
     var pos1 = this.get_position_vector();
@@ -97,7 +103,7 @@ function Dancer(x, y, w, h, options_) {
         y: pos3.y
       }
     );
-  }
+  };
 
   this.update_partners = function() {
     this.afraid = [];
@@ -105,17 +111,15 @@ function Dancer(x, y, w, h, options_) {
 
     this.used = [];
 
-    var i;
+    var i, index;
 
     for (i = 0, len = this.n_afraid; i < len; i++) {
-      var index = 0;
-
-      int(random(1, dancers.length));
+      index = int(random(1, dancers.length));
       this.afraid.push(dancers[index]);
     }
 
     for (i = 0, len = this.n_likes; i < len; i++) {
-      var index = int(random(1, dancers.length));
+      index = int(random(1, dancers.length));
       this.likes.push(dancers[index]);
     }
   };
