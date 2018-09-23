@@ -11,7 +11,7 @@ var dancers = [];
 var walls = [];
 
 function setup() {
-  createCanvas(800, 800);
+  createCanvas(700, 600);
   engine = Engine.create();
   world = engine.world;
 
