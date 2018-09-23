@@ -34,8 +34,8 @@ function spawn_dancers() {
       new Dancer(
         random(100, 500),
         random(100, 500),
-        12,
-        12
+        random(10, 15),
+        random(10, 15)
       )
     );
   }
