@@ -49,7 +49,7 @@ function draw() {
   }
 
   for (p in dancers) {
-    dancers[p].dance(dancers);
+    dancers[p].dance();
     dancers[p].show();
   }
 

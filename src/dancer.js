@@ -40,13 +40,13 @@ function Dancer(x, y, w, h, options_) {
     return createVector(this.body.position.x, this.body.position.y);
   }
 
-  this.dance = function(dancers) {
+  this.dance = function() {
     if (this.ticks > 0) {
       this.ticks -= 1;
       this.move();
     } else {
       this.ticks = int(500 + random(100));
-      this.update_partners(dancers);
+      this.update_partners();
     }
   };
 
@@ -79,7 +79,7 @@ function Dancer(x, y, w, h, options_) {
     );
   }
 
-  this.update_partners = function(dancers) {
+  this.update_partners = function() {
     this.afraid = [];
     this.likes = [];
 
