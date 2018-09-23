@@ -15,6 +15,8 @@ function Dancer(x, y, w, h, options_) {
   this.likes = [];
   this.ticks = 0;
 
+  this.collapse_cooldown = 0;
+
   if (options.color) {
     this.fill_color = options.color;
     this.border_color = options.border_color;
@@ -86,6 +88,28 @@ function Dancer(x, y, w, h, options_) {
     );
   };
 
+  this.check_bound = function() {
+    var pos = this.body.position;
+
+    if (pos.x < 0 || pos.x > width || pos.y < 0 || pos.y > height) {
+      Body.setPosition(
+        this.body,
+        {
+          x: random(100, width - 100),
+          y: random(100, height - 100)
+        }
+      );
+
+      Body.setVelocity(
+        this.body,
+        {
+          x: 0,
+          y: 0
+        }
+      );
+    }
+  };
+
   this.dance_towards = function(dancer, force) {
     var pos1 = this.get_position_vector();
     var pos2 = dancer.get_position_vector();
@@ -122,6 +146,25 @@ function Dancer(x, y, w, h, options_) {
       index = int(random(1, dancers.length));
       this.likes.push(dancers[index]);
     }
+  };
+
+  this.towards = function(position, force, options) {
+    var pos1 = this.get_position_vector();
+    var pos2 = position.copy();
+    var pos3 = pos2.sub(pos1);
+
+    pos3.setMag(force);
+
+    Body.applyForce(
+      this.body, {
+        x: pos1.x,
+        y: pos1.y
+      },
+      {
+        x: pos3.x,
+        y: pos3.y
+      }
+    );
   };
 }
 

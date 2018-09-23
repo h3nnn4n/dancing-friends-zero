@@ -20,6 +20,7 @@ function setup() {
 
   set_walls();
   spawn_dancers();
+  setControls();
 }
 
 function set_walls() {
@@ -50,24 +51,6 @@ function spawn_dancers() {
   }
 }
 
-function draw() {
-  background(255);
-
-  for (var p in walls) {
-    walls[p].show();
-  }
-
-  var center = get_center();
-
-  for (p in dancers) {
-    dancers[p].away_from_center(center);
-    dancers[p].dance();
-    dancers[p].show();
-  }
-
-  Engine.update(engine, 1000 / 60);
-}
-
 function get_center() {
   var l = dancers.length;
   var x = 0;
@@ -83,5 +66,24 @@ function get_center() {
     x / l,
     y / l
   );
+}
+
+function draw() {
+  background(255);
+
+  for (var p in walls) {
+    walls[p].show();
+  }
+
+  var center = get_center();
+
+  for (p in dancers) {
+    dancers[p].check_bound();
+    dancers[p].away_from_center(center);
+    dancers[p].dance();
+    dancers[p].show();
+  }
+
+  Engine.update(engine, 1000 / 60);
 }
 
