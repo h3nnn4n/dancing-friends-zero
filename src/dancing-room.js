@@ -44,8 +44,8 @@ function spawn_dancers() {
       new Dancer(
         random(100, width - 100),
         random(100, height - 100),
-        random(10, 15),
-        random(10, 15)
+        random(10, 10),
+        random(10, 10)
       )
     );
   }
@@ -79,11 +79,11 @@ function draw() {
 
   for (p in dancers) {
     dancers[p].check_bound();
-    dancers[p].away_from_center(center);
+    dancers[p].towards_center_of_mass(center);
     dancers[p].dance();
     dancers[p].show();
   }
 
-  Engine.update(engine, 1000 / 60);
+  Engine.update(engine, 1000 / 75);
 }
 

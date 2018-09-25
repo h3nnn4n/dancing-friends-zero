@@ -1,28 +1,44 @@
 function Dancer(x, y, w, h, options_) {
   var options = Object.assign({
     friction: 0.3,
-    restitution: 0.6
+    restitution: 0.6,
+    frictionAir: 0.25
   }, options_);
 
-  this.n_afraid = 10;
-  this.n_likes = 25;
+  this.n_afraid = 30;
+  this.n_likes = 1;
 
-  this.afraid_force = -0.000025;
-  this.likes_force = 0.0001;
-  this.center_force = -0.0001;
+  this.afraid_force = 0.0001;
+  this.likes_force = 0.0010;
+  this.center_of_mass_force = 0.0001;
+  this.center_of_room_force = 0.0003;
+
+  //this.afraid_force = 0;
+  //this.likes_force = 0;
+  //this.center_of_mass_force = 0;
+  //this.center_of_room_force = 0;
+
+  this.afraid_radius = 75;
+  this.likes_radius = 0;
+  this.center_of_mass_radius = 200;
+  this.center_of_room_radius = 200;
 
   this.afraid = [];
   this.likes = [];
   this.ticks = 0;
 
-  this.collapse_cooldown = 0;
+  this.center_of_the_room = createVector(width / 2, height / 2);
 
   if (options.color) {
     this.fill_color = options.color;
     this.border_color = options.border_color;
   } else {
-    this.fill_color = color(random() * 255, random() * 255, random() * 255);
-    this.border_color = color(255);
+    this.fill_color = color(
+      random(255),
+      random(127) + 127,
+      random(155) + 100
+    );
+    this.border_color = this.fill_color
   }
 
   this.body = Bodies.rectangle(x, y, w, h, options);
@@ -52,29 +68,35 @@ function Dancer(x, y, w, h, options_) {
   this.dance = function() {
     if (this.ticks > 0) {
       this.ticks -= 1;
-      this.move();
     } else {
-      this.ticks = int(500 + random(100));
+      this.ticks = int(550 + random(100));
       this.update_partners();
     }
+
+    this.move();
+    this.towards_center_of_the_room();
   };
 
   this.move = function() {
     for (var prop in this.likes) {
-      this.dance_towards(this.likes[prop], this.likes_force);
+      this.dance_towards(this.likes[prop]);
     }
 
     for (prop in this.afraid) {
-      this.dance_towards(this.afraid[prop], this.afraid_force);
+      this.dance_away_from(this.afraid[prop]);
     }
   };
 
-  this.away_from_center = function(center) {
+  this.towards_center_of_mass = function(center) {
     var pos1 = this.get_position_vector();
     var pos2 = center.copy();
     var pos3 = pos2.sub(pos1);
 
-    pos3.setMag(this.center_force);
+    if (pos3.mag() < this.center_of_mass_radius) {
+      return;
+    }
+
+    pos3.setMag(this.center_of_mass_force);
 
     Body.applyForce(
       this.body, {
@@ -108,25 +130,6 @@ function Dancer(x, y, w, h, options_) {
         }
       );
     }
-  };
-
-  this.dance_towards = function(dancer, force) {
-    var pos1 = this.get_position_vector();
-    var pos2 = dancer.get_position_vector();
-    var pos3 = pos2.sub(pos1);
-
-    pos3.setMag(force);
-
-    Body.applyForce(
-      this.body, {
-        x: pos1.x,
-        y: pos1.y
-      },
-      {
-        x: pos3.x,
-        y: pos3.y
-      }
-    );
   };
 
   this.update_partners = function() {
@@ -166,6 +169,75 @@ function Dancer(x, y, w, h, options_) {
       }
     );
   };
+}
+
+Dancer.prototype.dance_towards = function(dancer) {
+  var pos1 = this.get_position_vector();
+  var pos2 = dancer.get_position_vector();
+  var pos3 = pos2.sub(pos1);
+
+  if (pos3.mag() < this.likes_radius) {
+    return;
+  }
+
+  pos3.setMag(this.likes_force);
+
+  Body.applyForce(
+    this.body, {
+      x: pos1.x,
+      y: pos1.y
+    },
+    {
+      x: pos3.x,
+      y: pos3.y
+    }
+  );
+};
+
+Dancer.prototype.dance_away_from = function(dancer) {
+  var pos1 = this.get_position_vector();
+  var pos2 = dancer.get_position_vector();
+  var pos3 = pos2.sub(pos1);
+
+  if (pos3.mag() > this.afraid_radius) {
+    return;
+  }
+
+  pos3.setMag(-this.afraid_force);
+
+  Body.applyForce(
+    this.body, {
+      x: pos1.x,
+      y: pos1.y
+    },
+    {
+      x: pos3.x,
+      y: pos3.y
+    }
+  );
+}
+
+Dancer.prototype.towards_center_of_the_room = function() {
+  var pos1 = this.get_position_vector();
+  var pos2 = this.center_of_the_room.copy();
+  var pos3 = pos2.sub(pos1);
+
+  if (pos3.mag() < this.center_of_room_radius) {
+    return;
+  }
+
+  pos3.setMag(this.center_of_room_force);
+
+  Body.applyForce(
+    this.body, {
+      x: pos1.x,
+      y: pos1.y
+    },
+    {
+      x: pos3.x,
+      y: pos3.y
+    }
+  );
 }
 
 function drawArrow(base, vec, myColor) {
