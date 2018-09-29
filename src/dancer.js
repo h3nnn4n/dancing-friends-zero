@@ -94,8 +94,10 @@ function Dancer(x, y, radius) {
 
   this.check_bound = function() {
     if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
-      this.x = random(100, width - 100);
-      this.y = random(100, height - 100);
+      var p = random(dancers);
+
+      var x = p.x;
+      var y = p.y;
     }
   };
 

@@ -8,7 +8,7 @@ function setup() {
   colorMode(HSB);
 
   //set_walls();
-  spawn_dancers();
+  spawn_dancers(200, true);
   setControls();
 }
 
@@ -19,17 +19,27 @@ function set_walls() {
   walls.push(new Dancer(width     , height / 2 , 50    , height));
 }
 
-function spawn_dancers(n) {
+function spawn_dancers(n, do_random) {
   for (var i = 0; i < n; i++) {
-    spawn_dancer();
+    spawn_dancer(do_random);
   }
 }
 
-function spawn_dancer() {
+function spawn_dancer(do_random) {
+  if (do_random || dancers.length == 0) {
+    var x = random(100, width - 100);
+    var y = random(100, height - 100);
+  } else {
+    var p = random(dancers);
+
+    var x = p.x;
+    var y = p.y;
+  }
+
   dancers.push(
     new Dancer(
-      random(100, width - 100),
-      random(100, height - 100),
+      x,
+      y,
       2
     )
   );
