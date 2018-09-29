@@ -1,22 +1,9 @@
-var Engine = Matter.Engine,
-  World = Matter.World,
-  Events = Matter.Events,
-  Composites = Matter.Composites,
-  Bodies = Matter.Bodies,
-  Body = Matter.Body;
-
-var engine;
-var world;
 var dancers = [];
 var walls = [];
 
 function setup() {
   createCanvas(700, 600);
   colorMode(HSB);
-  engine = Engine.create();
-  world = engine.world;
-
-  engine.world.gravity.y = 0;
 
   //set_walls();
   spawn_dancers();
@@ -24,18 +11,10 @@ function setup() {
 }
 
 function set_walls() {
-  colorMode(RGB);
-  var options = {
-    isStatic: true,
-    color: color(120),
-    border_color: color(120)
-  };
-  colorMode(HSB);
-
-  walls.push(new Dancer(width / 2 , height     , width , 50     , options));
-  walls.push(new Dancer(width / 2 , 0          , width , 50     , options));
-  walls.push(new Dancer(0         , height / 2 , 50    , height , options));
-  walls.push(new Dancer(width     , height / 2 , 50    , height , options));
+  walls.push(new Dancer(width / 2 , height     , width , 50    ));
+  walls.push(new Dancer(width / 2 , 0          , width , 50    ));
+  walls.push(new Dancer(0         , height / 2 , 50    , height));
+  walls.push(new Dancer(width     , height / 2 , 50    , height));
 }
 
 function spawn_dancers() {
@@ -57,8 +36,8 @@ function get_center() {
 
   for (var prop in dancers) {
     var d = dancers[prop];
-    x += d.body.position.x;
-    y += d.body.position.y;
+    x += d.x;
+    y += d.y;
   }
 
   return createVector(
@@ -78,11 +57,9 @@ function draw() {
 
   for (p in dancers) {
     dancers[p].check_bound();
-    dancers[p].towards_center_of_mass(center);
+    //dancers[p].towards_center_of_mass(center);
     dancers[p].dance();
     dancers[p].show();
   }
-
-  Engine.update(engine, 1000 / 75);
 }
 

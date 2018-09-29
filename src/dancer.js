@@ -1,27 +1,28 @@
-function Dancer(x, y, radius, options_) {
-  var options = Object.assign({
-    friction: 0.3,
-    restitution: 0.6,
-    frictionAir: 0.25
-  }, options_);
-
+function Dancer(x, y, radius) {
   this.radius = radius;
+  this.x = x;
+  this.y = y;
 
-  this.n_afraid = 30;
+  this.n_afraid = 1;
   this.n_likes = 1;
 
-  this.afraid_force = 0.0001;
-  this.likes_force = 0.0010;
-  this.center_of_mass_force = 0.0001;
-  this.center_of_room_force = 0.0003;
+  this.afraid_force = 0.03;
+  this.likes_force = 0.08;
+  this.center_of_mass_force = 0.01;
+  this.center_of_room_force = 0.03;
 
-  //this.afraid_force = 0;
-  //this.likes_force = 0;
-  //this.center_of_mass_force = 0;
-  //this.center_of_room_force = 0;
+  this.scale = 25;
 
-  this.afraid_radius = 75;
-  this.likes_radius = 0;
+  this.afraid_force *= this.scale;
+  this.likes_force *= this.scale;
+  this.center_of_mass_force *= this.scale;
+  this.center_of_room_force *= this.scale;
+
+  this.center_of_mass_force *= 0;
+  this.center_of_room_force *= 0;
+
+  this.afraid_radius = this.radius * 2;
+  this.likes_radius = this.radius * 2;
   this.center_of_mass_radius = 200;
   this.center_of_room_radius = 200;
 
@@ -31,29 +32,17 @@ function Dancer(x, y, radius, options_) {
 
   this.center_of_the_room = createVector(width / 2, height / 2);
 
-  if (options.color) {
-    this.fill_color = options.color;
-    this.border_color = options.border_color;
-  } else {
-    this.fill_color = color(
-      random(255),
-      random(127) + 127,
-      random(155) + 100
-    );
+  this.fill_color = color(
+    random(255),
+    random(127) + 127,
+    random(155) + 100
+  );
 
-    this.border_color = this.fill_color;
-  }
-
-  this.body = Bodies.circle(x, y, radius, options);
-  World.add(world, this.body);
+  this.border_color = this.fill_color;
 
   this.show = function() {
-    var pos = this.body.position;
-    var angle = this.body.angle;
-
     push();
-    translate(pos.x, pos.y);
-    rotate(angle);
+    translate(this.x, this.y);
     rectMode(CENTER);
     strokeWeight(1);
     stroke(this.border_color);
@@ -63,7 +52,7 @@ function Dancer(x, y, radius, options_) {
   };
 
   this.get_position_vector = function() {
-    return createVector(this.body.position.x, this.body.position.y);
+    return createVector(this.x, this.y);
   };
 
   this.dance = function() {
@@ -99,37 +88,14 @@ function Dancer(x, y, radius, options_) {
 
     pos3.setMag(this.center_of_mass_force);
 
-    Body.applyForce(
-      this.body, {
-        x: pos1.x,
-        y: pos1.y
-      },
-      {
-        x: pos3.x,
-        y: pos3.y
-      }
-    );
+    this.x += pos3.x;
+    this.y += pos3.y;
   };
 
   this.check_bound = function() {
-    var pos = this.body.position;
-
-    if (pos.x < 0 || pos.x > width || pos.y < 0 || pos.y > height) {
-      Body.setPosition(
-        this.body,
-        {
-          x: random(100, width - 100),
-          y: random(100, height - 100)
-        }
-      );
-
-      Body.setVelocity(
-        this.body,
-        {
-          x: 0,
-          y: 0
-        }
-      );
+    if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
+      this.x = random(100, width - 100);
+      this.y = random(100, height - 100);
     }
   };
 
@@ -159,16 +125,8 @@ function Dancer(x, y, radius, options_) {
 
     pos3.setMag(force);
 
-    Body.applyForce(
-      this.body, {
-        x: pos1.x,
-        y: pos1.y
-      },
-      {
-        x: pos3.x,
-        y: pos3.y
-      }
-    );
+    this.x += pos3.x;
+    this.y += pos3.y;
   };
 }
 
@@ -183,16 +141,8 @@ Dancer.prototype.dance_towards = function(dancer) {
 
   pos3.setMag(this.likes_force);
 
-  Body.applyForce(
-    this.body, {
-      x: pos1.x,
-      y: pos1.y
-    },
-    {
-      x: pos3.x,
-      y: pos3.y
-    }
-  );
+  this.x += pos3.x;
+  this.y += pos3.y;
 };
 
 Dancer.prototype.dance_away_from = function(dancer) {
@@ -200,23 +150,15 @@ Dancer.prototype.dance_away_from = function(dancer) {
   var pos2 = dancer.get_position_vector();
   var pos3 = pos2.sub(pos1);
 
-  if (pos3.mag() > this.afraid_radius) {
+  if (pos3.mag() < this.afraid_radius) {
     return;
   }
 
   pos3.setMag(-this.afraid_force);
 
-  Body.applyForce(
-    this.body, {
-      x: pos1.x,
-      y: pos1.y
-    },
-    {
-      x: pos3.x,
-      y: pos3.y
-    }
-  );
-}
+  this.x += pos3.x;
+  this.y += pos3.y;
+};
 
 Dancer.prototype.towards_center_of_the_room = function() {
   var pos1 = this.get_position_vector();
@@ -229,17 +171,9 @@ Dancer.prototype.towards_center_of_the_room = function() {
 
   pos3.setMag(this.center_of_room_force);
 
-  Body.applyForce(
-    this.body, {
-      x: pos1.x,
-      y: pos1.y
-    },
-    {
-      x: pos3.x,
-      y: pos3.y
-    }
-  );
-}
+  this.x += pos3.x;
+  this.y += pos3.y;
+};
 
 function drawArrow(base, vec, myColor) {
   push();
