@@ -3,23 +3,25 @@ function Dancer(x, y, radius) {
   this.x = x;
   this.y = y;
 
-  this.n_afraid = 1;
+  this.n_afraid = 2;
   this.n_likes = 1;
 
-  this.afraid_force = 0.03;
+  this.afraid_force = 0.015;
   this.likes_force = 0.08;
   this.center_of_mass_force = 0.01;
-  this.center_of_room_force = 0.03;
+  this.center_of_room_force = 0.01;
 
-  this.scale = 25;
+  this.scale = 12.5;
 
   this.afraid_force *= this.scale;
   this.likes_force *= this.scale;
   this.center_of_mass_force *= this.scale;
   this.center_of_room_force *= this.scale;
 
-  this.center_of_mass_force *= 0;
-  this.center_of_room_force *= 0;
+  //this.afraid_force *= 0;
+  //this.likes_force *= 0;
+  //this.center_of_mass_force *= 0;
+  //this.center_of_room_force *= 0;
 
   this.afraid_radius = this.radius * 2;
   this.likes_radius = this.radius * 2;
@@ -33,9 +35,7 @@ function Dancer(x, y, radius) {
   this.center_of_the_room = createVector(width / 2, height / 2);
 
   this.fill_color = color(
-    random(255),
-    random(127) + 127,
-    random(155) + 100
+    0, 0, 0
   );
 
   this.border_color = this.fill_color;
