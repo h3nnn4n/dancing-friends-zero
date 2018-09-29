@@ -1,9 +1,11 @@
-function Dancer(x, y, w, h, options_) {
+function Dancer(x, y, radius, options_) {
   var options = Object.assign({
     friction: 0.3,
     restitution: 0.6,
     frictionAir: 0.25
   }, options_);
+
+  this.radius = radius;
 
   this.n_afraid = 30;
   this.n_likes = 1;
@@ -38,12 +40,11 @@ function Dancer(x, y, w, h, options_) {
       random(127) + 127,
       random(155) + 100
     );
-    this.border_color = this.fill_color
+
+    this.border_color = this.fill_color;
   }
 
-  this.body = Bodies.rectangle(x, y, w, h, options);
-  this.w = w;
-  this.h = h;
+  this.body = Bodies.circle(x, y, radius, options);
   World.add(world, this.body);
 
   this.show = function() {
@@ -57,7 +58,7 @@ function Dancer(x, y, w, h, options_) {
     strokeWeight(1);
     stroke(this.border_color);
     fill(this.fill_color);
-    rect(0, 0, this.w, this.h);
+    ellipse(0, 0, this.radius * 2);
     pop();
   };
 

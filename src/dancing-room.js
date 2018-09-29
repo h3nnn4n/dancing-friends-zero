@@ -18,7 +18,7 @@ function setup() {
 
   engine.world.gravity.y = 0;
 
-  set_walls();
+  //set_walls();
   spawn_dancers();
   setControls();
 }
@@ -44,8 +44,7 @@ function spawn_dancers() {
       new Dancer(
         random(100, width - 100),
         random(100, height - 100),
-        random(10, 10),
-        random(10, 10)
+        6
       )
     );
   }
