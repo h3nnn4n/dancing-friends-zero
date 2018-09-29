@@ -19,15 +19,25 @@ function set_walls() {
   walls.push(new Dancer(width     , height / 2 , 50    , height));
 }
 
-function spawn_dancers() {
-  for (var i = 0; i < 500; i++) {
-    dancers.push(
-      new Dancer(
-        random(100, width - 100),
-        random(100, height - 100),
-        1.2
-      )
-    );
+function spawn_dancers(n) {
+  for (var i = 0; i < n; i++) {
+    spawn_dancer();
+  }
+}
+
+function spawn_dancer() {
+  dancers.push(
+    new Dancer(
+      random(100, width - 100),
+      random(100, height - 100),
+      1.2
+    )
+  );
+}
+
+function kill_dancers(n) {
+  for (var i = 0; i < n; i++) {
+    dancers.pop();
   }
 }
 
@@ -69,6 +79,6 @@ function draw() {
     dancers[p].show();
   }
 
-  text(frameRate().toFixed(2), 50, 200);
+  manage_dancer_count();
 }
 
