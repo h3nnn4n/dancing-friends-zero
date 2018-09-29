@@ -30,7 +30,7 @@ function spawn_dancer() {
     new Dancer(
       random(100, width - 100),
       random(100, height - 100),
-      1.2
+      2
     )
   );
 }
