@@ -3,15 +3,18 @@ function Dancer(x, y, radius) {
   this.x = x;
   this.y = y;
 
-  this.n_afraid = 1;
+  this.n_afraid = 2;
   this.n_likes = 1;
 
   this.afraid_force = 0.03;
   this.likes_force = 0.08;
   this.center_of_mass_force = 0.01;
-  this.center_of_room_force = 0.01;
+  this.center_of_room_force = 0.005;
 
   this.scale = 12.5;
+
+  this.afraid_force /= this.n_afraid;
+  this.likes_force /= this.n_likes;
 
   this.afraid_force *= this.scale;
   this.likes_force *= this.scale;
@@ -25,8 +28,8 @@ function Dancer(x, y, radius) {
 
   this.afraid_radius = this.radius * 2;
   this.likes_radius = this.radius * 2;
-  this.center_of_mass_radius = 200;
-  this.center_of_room_radius = 200;
+  this.center_of_mass_radius = 100;
+  this.center_of_room_radius = 10;
 
   this.afraid = [];
   this.likes = [];
@@ -67,6 +70,10 @@ function Dancer(x, y, radius) {
 
       this.update_partners();
     }
+
+    //if (random() < 0.00005) {
+      //this.update_partners();
+    //}
 
     this.move();
     this.towards_center_of_the_room();
