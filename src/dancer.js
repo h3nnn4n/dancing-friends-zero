@@ -57,7 +57,7 @@ function Dancer(x, y, radius) {
 
   this.dance = function() {
     if (this.ticks > 0) {
-      this.ticks -= 1;
+      //this.ticks -= 1;
     } else {
       if (random() < 0.5) {
         this.ticks = int(2400);

@@ -71,6 +71,12 @@ function get_center() {
   );
 }
 
+function mousePressed() {
+  for (var p in dancers) {
+    dancers[p].update_partners();
+  }
+}
+
 function draw() {
   background(255);
 
