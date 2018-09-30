@@ -3,10 +3,10 @@ function Dancer(x, y, radius) {
   this.x = x;
   this.y = y;
 
-  this.n_afraid = 2;
+  this.n_afraid = 1;
   this.n_likes = 1;
 
-  this.afraid_force = 0.015;
+  this.afraid_force = 0.03;
   this.likes_force = 0.08;
   this.center_of_mass_force = 0.01;
   this.center_of_room_force = 0.01;
@@ -59,7 +59,12 @@ function Dancer(x, y, radius) {
     if (this.ticks > 0) {
       this.ticks -= 1;
     } else {
-      this.ticks = int(550 + random(100));
+      if (random() < 0.5) {
+        this.ticks = int(2400);
+      } else {
+        this.ticks = int(4800);
+      }
+
       this.update_partners();
     }
 
