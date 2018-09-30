@@ -9,7 +9,7 @@ function setup() {
 
   //set_walls();
   spawn_dancers(200, true);
-  setControls();
+  //setControls();
 }
 
 function set_walls() {
@@ -26,14 +26,17 @@ function spawn_dancers(n, do_random) {
 }
 
 function spawn_dancer(do_random) {
+  var x;
+  var y;
+
   if (do_random || dancers.length == 0) {
-    var x = random(100, width - 100);
-    var y = random(100, height - 100);
+    x = random(100, width - 100);
+    y = random(100, height - 100);
   } else {
     var p = random(dancers);
 
-    var x = p.x;
-    var y = p.y;
+    x = p.x;
+    y = p.y;
   }
 
   dancers.push(
@@ -71,17 +74,19 @@ function get_center() {
 function draw() {
   background(255);
 
+  var p;
+
   for (var i = 0; i < steps_per_frame; i++) {
     var center = get_center();
 
     for (p in dancers) {
-      dancers[p].check_bound();
       dancers[p].towards_center_of_mass(center);
       dancers[p].dance();
+      dancers[p].check_bound();
     }
   }
 
-  for (var p in walls) {
+  for (p in walls) {
     walls[p].show();
   }
 
@@ -91,4 +96,3 @@ function draw() {
 
   manage_dancer_count();
 }
-

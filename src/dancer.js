@@ -101,8 +101,8 @@ function Dancer(x, y, radius) {
     if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
       var p = random(dancers);
 
-      var x = p.x;
-      var y = p.y;
+      this.x = p.x;
+      this.y = p.y;
     }
   };
 
