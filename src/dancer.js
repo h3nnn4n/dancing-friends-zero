@@ -142,11 +142,15 @@ Dancer.prototype.dance_towards = function(dancer) {
   var pos2 = dancer.get_position_vector();
   var pos3 = pos2.sub(pos1);
 
-  if (pos3.mag() < this.likes_radius) {
-    return;
-  }
+  var dist = pos3.mag();
 
-  pos3.setMag(this.likes_force);
+  if (dist < this.likes_radius) {
+    return;
+  } else if (dist >= this.likes_radius + this.likes_force) {
+    pos3.setMag(this.likes_force);
+  } else if (dist < this.likes_radius + this.likes_force) {
+    pos3.setMag(dist - this.likes_radius);
+  }
 
   this.x += pos3.x;
   this.y += pos3.y;
